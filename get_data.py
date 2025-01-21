@@ -68,7 +68,6 @@ def download_file_and_load_json(service, file_name):
         done = False
         while not done:
             status, done = downloader.next_chunk()
-            st.write(f"Téléchargement {int(status.progress() * 100)}%.")
         
         file_data.seek(0)
         data = json.load(file_data)
@@ -93,9 +92,9 @@ def get_data_file():
     
     return json_data
 
-
-data = get_data_file()
-if "error" in data:
-    st.error(data["error"])
-else:
-    st.write("Données récupérées avec succès:", data)
+def get():
+    data = get_data_file()
+    if "error" in data:
+        st.error(data["error"])
+    else:
+        return data

@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from get_data import get_data_file
+from get_data import get
 from collections import OrderedDict
 
 
@@ -74,8 +74,7 @@ def get_cumulative_times(game_times):
 
 # Get data
 try:
-    data = get_data_file()
-    st.write(data)
+    data = get()
 except Exception as E:
     st.warning('No data found')
     st.error(E)
