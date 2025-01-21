@@ -1,5 +1,4 @@
 credentials.json
-token.pickle
 *.log
 *.db
 *.pyc
