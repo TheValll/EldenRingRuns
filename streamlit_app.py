@@ -75,8 +75,9 @@ def get_cumulative_times(game_times):
 # Get data
 try:
     data = get_data_file()
-except:
+except Exception as E:
     st.warning('No data found')
+    st.error(E)
     st.stop()
 
 GameName = data["GameName"]
