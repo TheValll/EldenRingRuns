@@ -9,6 +9,9 @@ from googleapiclient.http import MediaIoBaseDownload
 from dotenv import load_dotenv
 
 load_dotenv()
+print(f"CLIENT_ID: {os.getenv('CLIENT_ID')}")
+print(f"PROJECT_ID: {os.getenv('PROJECT_ID')}")
+print(f"SCOPES: {os.getenv('SCOPES')}")
 
 SCOPES = [os.getenv('SCOPES')]
 
