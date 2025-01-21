@@ -5,3 +5,4 @@ token.pickle
 *.pyc
 __pycache__/
 .env
+secrets.toml

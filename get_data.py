@@ -1,4 +1,3 @@
-import os
 import json
 import io
 import pickle
@@ -6,15 +5,17 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 from googleapiclient.http import MediaIoBaseDownload
-from dotenv import load_dotenv
 import streamlit as st
+import os
 
-load_dotenv()
-st.secrets(f"CLIENT_ID: {os.getenv('CLIENT_ID')}")
-st.secrets(f"PROJECT_ID: {os.getenv('PROJECT_ID')}")
-st.secrets(f"SCOPES: {os.getenv('SCOPES')}")
-
-SCOPES = [os.getenv('SCOPES')]
+CLIENT_ID = st.secrets["client"]["CLIENT_ID"]
+CLIENT_SECRET = st.secrets["client"]["CLIENT_SECRET"]
+PROJECT_ID = st.secrets["client"]["PROJECT_ID"]
+AUTH_URI = st.secrets["urls"]["AUTH_URI"]
+TOKEN_URI = st.secrets["urls"]["TOKEN_URI"]
+AUTH_PROVIDER_X509_CERT_URL = st.secrets["urls"]["AUTH_PROVIDER_X509_CERT_URL"]
+REDIRECT_URIS = st.secrets["redirect"]["REDIRECT_URIS"]
+SCOPES = st.secrets["scopes"]["SCOPES"]
 
 def authenticate():
     """Authentifie l'utilisateur et retourne le service Google Drive."""
@@ -30,13 +31,13 @@ def authenticate():
                 flow = InstalledAppFlow.from_client_config(
                     {
                         "installed": {
-                            "client_id": os.getenv('CLIENT_ID'),
-                            "project_id": os.getenv('PROJECT_ID'),
-                            "auth_uri": os.getenv('AUTH_URI'),
-                            "token_uri": os.getenv('TOKEN_URI'),
-                            "auth_provider_x509_cert_url": os.getenv('AUTH_PROVIDER_X509_CERT_URL'),
-                            "client_secret": os.getenv('CLIENT_SECRET'),
-                            "redirect_uris": [os.getenv('REDIRECT_URIS')]
+                            "client_id": CLIENT_ID,
+                            "project_id": PROJECT_ID,
+                            "auth_uri": AUTH_URI,
+                            "token_uri": TOKEN_URI,
+                            "auth_provider_x509_cert_url": AUTH_PROVIDER_X509_CERT_URL,
+                            "client_secret": CLIENT_SECRET,
+                            "redirect_uris": REDIRECT_URIS
                         }
                     },
                     SCOPES
@@ -46,9 +47,8 @@ def authenticate():
                 pickle.dump(creds, token)
         return build('drive', 'v3', credentials=creds)
     except Exception as e:
-        print(f"Erreur d'authentification : {e}")
+        st.error(f"Erreur d'authentification : {e}")
         return None
-
 
 def download_file_and_load_json(service, file_name):
     """Télécharge un fichier depuis Google Drive et charge son contenu JSON."""
@@ -68,19 +68,18 @@ def download_file_and_load_json(service, file_name):
         done = False
         while not done:
             status, done = downloader.next_chunk()
-            print(f"Téléchargement {int(status.progress() * 100)}%.")
+            st.write(f"Téléchargement {int(status.progress() * 100)}%.")
         
         file_data.seek(0)
         data = json.load(file_data)
         return data
 
     except FileNotFoundError as e:
-        print(f"Erreur : {e}")
+        st.error(f"Erreur : {e}")
         return None
     except Exception as e:
-        print(f"Erreur lors du téléchargement ou du chargement du fichier : {e}")
+        st.error(f"Erreur lors du téléchargement ou du chargement du fichier : {e}")
         return None
-
 
 def get_data_file():
     """Obtient le fichier de données à partir de Google Drive."""
@@ -93,3 +92,10 @@ def get_data_file():
         return {"error": "Échec du téléchargement ou du chargement du fichier JSON"}
     
     return json_data
+
+
+data = get_data_file()
+if "error" in data:
+    st.error(data["error"])
+else:
+    st.write("Données récupérées avec succès:", data)
