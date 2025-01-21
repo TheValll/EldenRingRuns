@@ -10,9 +10,9 @@ from dotenv import load_dotenv
 import streamlit as st
 
 load_dotenv()
-st.write(f"CLIENT_ID: {os.getenv('CLIENT_ID')}")
-st.write(f"PROJECT_ID: {os.getenv('PROJECT_ID')}")
-st.write(f"SCOPES: {os.getenv('SCOPES')}")
+st.secrets(f"CLIENT_ID: {os.getenv('CLIENT_ID')}")
+st.secrets(f"PROJECT_ID: {os.getenv('PROJECT_ID')}")
+st.secrets(f"SCOPES: {os.getenv('SCOPES')}")
 
 SCOPES = [os.getenv('SCOPES')]
 
