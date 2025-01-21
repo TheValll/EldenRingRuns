@@ -1,0 +1,7 @@
+credentials.json
+token.pickle
+*.log
+*.db
+*.pyc
+__pycache__/
+.env

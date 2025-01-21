@@ -1,0 +1,44 @@
+name: Run Python Script with Google Drive
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: List files in project
+        run: |
+          ls -la
+          ls -la config
+          ls -la scripts
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Python script
+        env:
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          TOKEN_URI: ${{ secrets.TOKEN_URI }}
+          AUTH_URI: ${{ secrets.AUTH_URI }}
+          AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}
+          REDIRECT_URIS: ${{ secrets.REDIRECT_URIS }}
+          SCOPES: ${{ secrets.SCOPES }}
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+        run: |
+          python scripts/google.py
