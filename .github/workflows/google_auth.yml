@@ -18,7 +18,6 @@ jobs:
       - name: List files in project
         run: |
           ls -la
-          ls -la config
           ls -la scripts
 
       - name: Set up Python
