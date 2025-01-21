@@ -7,11 +7,12 @@ from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 from googleapiclient.http import MediaIoBaseDownload
 from dotenv import load_dotenv
+import streamlit as st
 
 load_dotenv()
-print(f"CLIENT_ID: {os.getenv('CLIENT_ID')}")
-print(f"PROJECT_ID: {os.getenv('PROJECT_ID')}")
-print(f"SCOPES: {os.getenv('SCOPES')}")
+st.write(f"CLIENT_ID: {os.getenv('CLIENT_ID')}")
+st.write(f"PROJECT_ID: {os.getenv('PROJECT_ID')}")
+st.write(f"SCOPES: {os.getenv('SCOPES')}")
 
 SCOPES = [os.getenv('SCOPES')]
 
